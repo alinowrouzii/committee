@@ -1,12 +1,8 @@
-import dotenv from "dotenv";
-dotenv.config();
-import express, { Express, Request, Response } from "express";
+
+import express, { Express } from "express";
 import bodyParser from "body-parser";
 import helmet from "helmet";
 
-
-
-const PORT = process.env.PORT || 3000;
 const app: Express = express();
 
 app.use(helmet());

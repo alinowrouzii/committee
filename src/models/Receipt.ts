@@ -1,5 +1,4 @@
-import { Mode } from 'fs';
-import mongoose, { Model } from 'mongoose'
+import mongoose from 'mongoose'
 
 const receiptSchema = new mongoose.Schema({
 
