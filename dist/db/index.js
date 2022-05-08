@@ -39,29 +39,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = __importDefault(require("./config/index"));
-var app_1 = __importDefault(require("./app"));
-var payment_1 = __importDefault(require("./routes/payment"));
-var index_2 = __importDefault(require("./db/index"));
-var runAPI = function () { return __awaiter(void 0, void 0, void 0, function () {
+var mongoose_1 = __importDefault(require("mongoose"));
+var index_1 = __importDefault(require("../config/index"));
+var connetDB = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, index_2.default)()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, mongoose_1.default.connect(index_1.default.mongoURL)];
             case 1:
                 _a.sent();
-                app_1.default.get("/ping", function (req, res) {
-                    return res.status(200).json("PONG!");
-                });
-                app_1.default.use("/payment", payment_1.default);
-                return [2 /*return*/, app_1.default];
+                console.log('MongoDB connected!!');
+                return [3 /*break*/, 3];
+            case 2:
+                err_1 = _a.sent();
+                throw Error("Failed to connect to MongoDB ".concat(err_1));
+            case 3: return [2 /*return*/];
         }
     });
 }); };
-app_1.default.get("/", function (req, res) {
-    res.send("<h1>Hello from the TypeScript world!</h1>");
-});
-runAPI().then(function (app) {
-    app.listen(index_1.default.PORT, function () { return console.log("Running on ".concat(index_1.default.PORT, " \u26A1")); });
-}).catch(function (err) {
-    console.log(err);
-});
+exports.default = connetDB;
