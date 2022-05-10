@@ -2,8 +2,8 @@ import config from './config/index'
 import { Request, Response } from "express";
 import app from "./app"
 import payRouter from "./routes/payment"
+import receiptRouter from "./routes/receipts"
 import connectDB from "./db/index"
-import { generate_new_ac_token } from './services/ac_tokens';
 const runAPI = async () => {
 
   await connectDB()
@@ -13,6 +13,7 @@ const runAPI = async () => {
   });
 
   app.use("/payment", payRouter);
+  app.use("/receipt", receiptRouter);
 
   return app;
 
