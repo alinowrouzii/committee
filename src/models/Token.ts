@@ -1,5 +1,4 @@
-import mongoose, {model} from 'mongoose'
-import {generate_new_token} from '../services/tokens'
+import mongoose from 'mongoose'
 
 const tokenSchema = new mongoose.Schema({
 
@@ -13,6 +12,6 @@ const tokenSchema = new mongoose.Schema({
     }
 })
 
-const Token = mongoose.model("Receipt", tokenSchema);
+const Token = mongoose.model("Token", tokenSchema);
 
 export default Token

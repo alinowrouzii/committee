@@ -49,10 +49,10 @@ function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance {
     return axiosInstance   
 }
 
-const client = (config: AxiosRequestConfig)=> {
+const ac_client = (config: AxiosRequestConfig)=> {
     let instance: AxiosInstance = axios.create(config);
     instance = setupInterceptorsTo(instance)
     return instance
 }
 
-export { client }
+export { ac_client }

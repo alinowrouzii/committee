@@ -1,9 +1,14 @@
 import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
-import {generate_new_token} from '../services/tokens'
+import {generate_new_token, get_token} from '../services/tokens'
 
-const onRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
+const onRequest = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
     // console.info(`[request] [${JSON.stringify(config)}]`);
     // console.log(config)
+
+    const token = await get_token()
+    if(config.headers){
+        config.headers['Authorization'] = `Bearer ${token}`
+    }
     return config;
 }
 
@@ -25,8 +30,6 @@ const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
     
 
     if (error.response?.status !== 401 && error.response?.status !== 403){
-        console.log("shit")
-        console.log("========")
         return Promise.reject(error);
     }
 

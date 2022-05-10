@@ -31,15 +31,18 @@ const generate_initial_token = async () => {
     });
 
     await token.save();
+
+
+    return token.token
 };
 
 const generate_new_token = async function () {
     const tokens = await Token.find();
-    // if (tokens.length === 0) {
-    //     console.log("here");
-    //     await generate_initial_token();
-    //     return 
-    // }
+    if (tokens.length === 0) {
+        console.log("here");
+        await generate_initial_token();
+        return 
+    }
     const token = tokens[0];
     console.log(token)
     console.log("===========")
@@ -70,4 +73,15 @@ const generate_new_token = async function () {
     console.log(token)
 };
 
-export { generate_new_token, generate_initial_token };
+
+const get_token = async()=>{
+    const tokens = await Token.find()
+
+    if (tokens.length === 0){
+        return generate_initial_token();
+    }
+
+    return tokens[0].token
+}
+
+export { generate_new_token, generate_initial_token, get_token };
