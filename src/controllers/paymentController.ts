@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
-import { withdraw } from "../services/payment";
+import FinnotechServices from "../services/fnServices";
 import config from '../config/index';
 import Receipt from "../models/Receipt";
 
 const pay = async (req: Request, res: Response) => {
-    const pay_result = await withdraw(config.dst_card, "6362141130272843" )
+    const pay_result = await FinnotechServices.withdraw(config.dst_card, "6362141130272843" )
 
     const receipt = await Receipt.create({
         amount: pay_result.amount,

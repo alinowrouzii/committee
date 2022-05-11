@@ -4,6 +4,7 @@ import app from "./app"
 import payRouter from "./routes/payment"
 import receiptRouter from "./routes/receipts"
 import connectDB from "./db/index"
+import FinnotechServices from './services/fnServices';
 const runAPI = async () => {
 
   await connectDB()
@@ -25,8 +26,9 @@ app.get("/", (req: Request, res: Response) => {
 
 
 runAPI().then(app => {
-  app.listen(config.PORT, () => console.log(`Running on ${config.PORT} ⚡`));
-
+  FinnotechServices.get_sheba_number("6037997283647056").then(()=>{
+    app.listen(config.PORT, ( ) => console.log(`Running on ${config.PORT} ⚡`));
+  })
 }).catch(err => {
   console.log(err)
 })

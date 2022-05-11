@@ -1,58 +1,70 @@
-import axios, {AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse} from "axios";
-import {generate_new_token, get_token} from '../services/tokens'
+import axios, {
+    AxiosError,
+    AxiosInstance,
+    AxiosRequestConfig,
+    AxiosResponse,
+} from "axios";
+import TokenService from "../services/tokens";
 
-const onRequest = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
-    // console.info(`[request] [${JSON.stringify(config)}]`);
-    // console.log(config)
+class AxiosClient {
+    axiosInstance: AxiosInstance;
 
-    const token = await get_token()
-    if(config.headers){
-        config.headers['Authorization'] = `Bearer ${token}`
+    constructor(config: any) {
+        this.axiosInstance = axios.create(config);
+        this.axiosInstance.interceptors.request.use(
+            AxiosClient.onRequest,
+            AxiosClient.onRequestError
+        );
+        this.axiosInstance.interceptors.response.use(
+            AxiosClient.onResponse,
+            AxiosClient.onResponseError
+        );
     }
-    return config;
-}
 
-const onRequestError = (error: AxiosError): Promise<AxiosError> => {
-    console.error(`[request error] [${error}]`);
-    console.log(error.message)
-    return Promise.reject(error);
-}
+    private static async onRequest(
+        config: AxiosRequestConfig
+    ): Promise<AxiosRequestConfig> {
+        const token = await TokenService.get_token();
+        if (config.headers) {
+            config.headers["Authorization"] = `Bearer ${token}`;
+        }
 
-const onResponse = (response: AxiosResponse): AxiosResponse => {
-    console.info(`[response] [${response}]`);
-    return response;
-}
+        console.log(config);
+        return config;
+    }
 
-// NOTE: by default async function returns promise
-const onResponseError = async (error: AxiosError): Promise<AxiosError> => {
-
-    console.error(`[response error] [${error}]`);
-    
-
-    if (error.response?.status !== 401 && error.response?.status !== 403){
+    private static onRequestError(error: AxiosError): Promise<AxiosError> {
+        // console.error(`[request error] [${error}]`);
+        // console.log(error.message)
         return Promise.reject(error);
     }
 
-    const new_token = await generate_new_token();
-
-    if(error.config.headers){
-        error.config.headers['Authorization'] = 'Bearer ' + new_token;
+    private static onResponse(response: AxiosResponse): AxiosResponse {
+        // console.info(`[response] [${response}]`);
+        return response;
     }
-    error.config.baseURL = undefined;
-    return axios.request(error.config);
-    
+
+    // NOTE: by default async function returns promise
+    private static async onResponseError(
+        error: AxiosError
+    ): Promise<AxiosError> {
+        // console.error(`[response error] [${error}]`);
+
+        if (error.response?.status !== 401 && error.response?.status !== 403) {
+            return Promise.reject(error);
+        }
+
+        console.log("im going to generate new token");
+        const new_token = await TokenService.generate_new_token();
+
+        if (error.config.headers) {
+            error.config.headers["Authorization"] = "Bearer " + new_token;
+            console.log("token was not valid. setting new token...");
+            await new Promise((r) => setTimeout(r, 10000));
+        }
+        error.config.baseURL = undefined;
+        return axios.request(error.config);
+    }
 }
 
-function setupInterceptorsTo(axiosInstance: AxiosInstance): AxiosInstance {
-    axiosInstance.interceptors.request.use(onRequest, onRequestError);
-    axiosInstance.interceptors.response.use(onResponse, onResponseError);
-    return axiosInstance   
-}
-
-const client = (config: AxiosRequestConfig)=> {
-    let instance: AxiosInstance = axios.create(config);
-    instance = setupInterceptorsTo(instance)
-    return instance
-}
-
-export { client }
+export default AxiosClient;
