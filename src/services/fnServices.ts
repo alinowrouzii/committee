@@ -2,10 +2,10 @@ import AxiosClient from "../config/axios";
 import ACAxiosClient from "../config/ac_axios";
 import { v4 as uuidv4 } from "uuid";
 
-class FinnotechServices {
+export class FinnotechServices {
   constructor(){}
 
-  static async get_sheba_number (card_num: string) {
+  static async getShebaNumber (card_num: string) {
 
     const headers = {
       "Content-Type": "application/json",
@@ -18,14 +18,14 @@ class FinnotechServices {
         headers: headers,
       }
     );
-    const IBAN_number = result.data.result.IBAN;
-    console.log(IBAN_number)
+    const IbanNumber = result.data.result.IBAN;
+    console.log(IbanNumber)
   
-    return IBAN_number;
+    return IbanNumber;
   };
   
   static async withdraw (dst_card_number: string, src_card_number: string) {
-    const dst_IBAN = await FinnotechServices.get_sheba_number(dst_card_number);
+    const dst_IBAN = await FinnotechServices.getShebaNumber(dst_card_number);
   
     const headers = {
       "Content-Type": "application/json",
@@ -55,4 +55,3 @@ class FinnotechServices {
   
 }
 
-export default FinnotechServices;

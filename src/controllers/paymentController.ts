@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import FinnotechServices from "../services/fnServices";
+import {FinnotechServices} from "../services/fnServices";
 import config from '../config/index';
 import Receipt from "../models/Receipt";
 

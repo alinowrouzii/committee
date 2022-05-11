@@ -4,7 +4,7 @@ import axios, {
     AxiosRequestConfig,
     AxiosResponse,
 } from "axios";
-import TokenService from "../services/tokens_services";
+import {TokenService} from "../services/tokens_services";
 
 class AxiosClient {
     axiosInstance: AxiosInstance;
